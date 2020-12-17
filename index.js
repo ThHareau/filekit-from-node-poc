@@ -2,10 +2,10 @@ require('dotenv')
   .config()
 
 const fs = require('fs')
-const { tankerSession } = require('./lib/tanker')
+const { openTankerSession } = require('./lib/tanker')
 const account = require('./lib/account')
 
-const getFile = async () => {
+const getFileContent = async () => {
   const [, , filePath] = process.argv
 
   await new Promise((res, rej) => {
@@ -21,11 +21,11 @@ const getFile = async () => {
 }
 
 const main = async () => {
-  const file = await getFile()
+  const file = await getFileContent()
 
   const accountRequest = await account.connect()
 
-  const tanker = await tankerSession(accountRequest)
+  const tanker = await openTankerSession(accountRequest)
 
   await tanker.upload(file, {
     shareWithGroups: [process.env.TANKER_DOCTOLIB_IMPORT_GROUP_ID],
